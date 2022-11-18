@@ -1,17 +1,7 @@
-import { Component } from 'react';
-
 import './appHeader.scss';
 
-class AppHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      characters: true,
-      comics: false
-    }
-  }
+const AppHeader = (props) => {
 
-  render () {
     return (
       <header className="app__header">
           <h1 className="app__title">
@@ -29,7 +19,6 @@ class AppHeader extends Component {
           </nav>
       </header>
     );
-  }
 }
 
 export default AppHeader;
