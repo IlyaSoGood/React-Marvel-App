@@ -12,21 +12,26 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      type: 'Characters'
     }
   }
 
   render () {
+    const typePage = this.state.type;
+
     return (
       <div className="app">
         <AppHeader/>
         <main>
-          <RandomChar/>
-          <div className='char__content'>
-            <CharList/>
-            <CharInfo/>
-          </div>
-          <img className="bg-decoration" src={vision} alt="vision"></img>
+          {typePage === 'Characters' && 
+            <RandomChar/>
+            <div className='char__content'>
+              <CharList/>
+              <CharInfo/>
+            </div>
+            <img className="bg-decoration" src={vision} alt="vision"></img>
+          }
+
         </main>
       </div>
     );
