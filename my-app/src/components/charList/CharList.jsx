@@ -1,3 +1,8 @@
+import { Component } from 'react';
+import Spinner from '../spinner/Spinner';
+import ErrorMessage from '../errorMessage/ErrorMessage';
+import MarvelService from '../../services/MarvelService';
+
 import './charList.scss';
 import abyss from '../../resources/img/abyss.jpg';
 
