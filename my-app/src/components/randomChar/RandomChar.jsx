@@ -49,15 +49,12 @@ class RandomChar extends Component {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         if (!this.state.loading) {this.onCharLoading()};
         this.marvelService
-        // .getAllCharacters()
-        // .then(res => console.log(res))
             .getCharacter(id)
             .then(this.onCharLoaded)
-            .catch(this.onError)
+            .catch(this.onError)        
     }
 
     render() {
-        console.log('render')
         const {char, loading, error} = this.state;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
@@ -88,12 +85,14 @@ class RandomChar extends Component {
 
 const View = ({char}) => {
     let {name, description, thumbnail, homepage, wiki} = char;
-    if (!description) {description = 'Описания на нашлось :-)'}
-    if(description.length > 194) {description = description.substring(0, 194) + '...'}
+    if (!description) {description = 'Описания на нашлось :-)'};
+    if(description.length > 194) {description = description.substring(0, 194) + '...'};
+    let styleThumbnail = {};
+    if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
 
     return (
         <div className="randomchar__block">
-        <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+        <img src={thumbnail} alt="Random character" className="randomchar__img" style={styleThumbnail}/>
         <div className="randomchar__info">
             <p className="randomchar__name">{name}</p>
             <p className="randomchar__descr">
