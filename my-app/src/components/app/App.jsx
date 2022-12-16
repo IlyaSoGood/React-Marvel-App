@@ -12,14 +12,22 @@ import './app.scss';
 import vision from '../../resources/img/vision.png';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      type: {
-        page: 'Characters',
-        pageComics: 'list'
-      }
-    }
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  state = {
+    type: {
+      page: 'Characters',
+      pageComics: 'list'
+    },
+    selectedChar: null
+  }
+
+  onCharSelected = (id) => {
+    this.setState({
+      selectedChar: id
+    })
   }
 
   render () {
@@ -34,8 +42,8 @@ class App extends Component {
             <>
               <RandomChar/>
               <div className='char__content'>
-                <CharList/>
-                <CharInfo/>
+                <CharList onCharSelected={this.onCharSelected}/>
+                <CharInfo charId={this.state.selectedChar}/>
               </div>
               <img className="bg-decoration" src={vision} alt="vision"></img>
             </>
