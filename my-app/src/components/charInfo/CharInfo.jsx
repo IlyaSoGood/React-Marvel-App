@@ -36,6 +36,7 @@ class CharInfo extends Component {
             .getCharacter(charId)
             .then(this.onCharLoaded)
             .catch(this.onError)
+        // this.foo.bar = 0;
     }
 
     onCharLoading = () => {
@@ -109,7 +110,7 @@ const View = ({char}) => {
                     <ul className="char__comics-list">
                         {
                             comics.map((item, i) => {
-                                if (i > 9) return false;
+                                if (i > 9) return;
                                 return (
                                     <li key={i} className="char__comics-item">
                                         {item.name}

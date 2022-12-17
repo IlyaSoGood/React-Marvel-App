@@ -45,6 +45,7 @@ class CharList extends Component {
             .getAllCharacters(number)
             .then(this.onCharListLoaded)
             .catch(this.onError)
+        // this.foo.bar = 0;
     }
 
     render () {

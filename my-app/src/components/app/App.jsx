@@ -7,6 +7,7 @@ import CharInfo from '../charInfo/CharInfo';
 import AppBanner from '../appBanner/AppBanner';
 import ComicsList from '../comicsList/ComicsList';
 import SingleComic from '../singleComic/SingleComic';
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
 import './app.scss';
 import vision from '../../resources/img/vision.png';
@@ -40,10 +41,17 @@ class App extends Component {
         <main>
           {typePage === 'Characters' && 
             <>
-              <RandomChar/>
+              <ErrorBoundary>
+                <RandomChar/>
+              </ErrorBoundary>
               <div className='char__content'>
-                <CharList onCharSelected={this.onCharSelected}/>
-                <CharInfo charId={this.state.selectedChar}/>
+                <ErrorBoundary>
+                  <CharList onCharSelected={this.onCharSelected}/>
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <CharInfo charId={this.state.selectedChar}/>
+                </ErrorBoundary>
+                
               </div>
               <img className="bg-decoration" src={vision} alt="vision"></img>
             </>
