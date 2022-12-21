@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
@@ -23,10 +25,10 @@ class CharList extends Component {
         // window.addEventListener('scroll', this.loadListByScroll(this.state.offset));
     }
     componentDidUpdate() {
-        console.log('componentDidUpdate');
+        // console.log('componentDidUpdate');
     }
     componentWillUnmount() {
-        console.log('componentWillUnmount');
+        // console.log('componentWillUnmount');
     }
 
     //Не доделана загрузка элементов при скролле. В данном исполнении обработчик scroll при скролле срабатывает много раз, вызывая метод this.onRequest много раз одновременно, создавая баги.
@@ -123,6 +125,10 @@ const ViewCharList = ({charList, props}) => {
             )
         })
     )
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func,
 }
 
 
