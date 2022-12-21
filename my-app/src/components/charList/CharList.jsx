@@ -13,16 +13,19 @@ class CharList extends Component {
         loading: true,
         error: false,
         newItemLoading: false,
-        offset: 1544,
+        offset: 200,
         charEnded: false,
         // scroll: 0
     }
 
+    firedList = false;
+
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.onRequest();
-        // window.addEventListener('scroll', this.loadListByScroll(this.state.offset));
+        this.onRequest(this.state.offset);
+        window.addEventListener('scroll', () => this.loadListByScroll(this.state.offset));
+        // window.addEventListener('scroll', (offset) => this.);
     }
     componentDidUpdate() {
         // console.log('componentDidUpdate');
@@ -31,21 +34,23 @@ class CharList extends Component {
         // console.log('componentWillUnmount');
     }
 
-    //Не доделана загрузка элементов при скролле. В данном исполнении обработчик scroll при скролле срабатывает много раз, вызывая метод this.onRequest много раз одновременно, создавая баги.
-    // loadListByScroll(offset) {
-    //     if ((Math.floor(window.outerHeight + window.pageYOffset) > Math.floor(document.scrollingElement.offsetHeight) - 20) && window.pageYOffset > 0) {
-    //         this.onRequest(offset);
-    //         console.log('loaded-List-By-Scroll');
-    //         // window.removeEventListener('scroll', () => this.loadListByScroll(this.state.offset));
-    //     }
-    // }
+    //Реализована дозагрузка CharList при скролле с помощью переменной this.firedList. Эта переменная принимает значение true каждый раз когда условия на событие scroll выполняются. CharList растянет window вниз. По завершению метода this.onRequest/this.onCharListLoaded (который выполнится спустя задержку), переменная снова принимает значение false при условии, что список новых персонажей = 9. ЕДИНСТВЕННЫЙ МОМЕНТ, не реализован removeEventListener на событие скролл в момент componentWillUnmount, так как функция должна быть именованной, а я пока не знаю как сослаться на this CharList, а не this объекта Event scroll.
+    loadListByScroll(offset) {
+        if (this.firedList === true) {return}
+        if ((Math.floor(window.outerHeight + window.pageYOffset) > Math.floor(document.scrollingElement.offsetHeight) - 20) && window.pageYOffset > 0) {
+            this.onRequest(offset);
+            this.firedList = true;
+            console.log('loaded-List-By-Scroll');
+            // window.removeEventListener('scroll', () => this.loadListByScroll(this.state.offset));
+        }
+    }
 
     onRequest = (offset) => {
         this.onCharListLoading();
         this.marvelService
             .getAllCharacters(offset)
             .then(this.onCharListLoaded)
-            .catch(this.onError)
+            .catch(this.onError);
     }
 
     onCharListLoading = () => {
@@ -60,6 +65,11 @@ class CharList extends Component {
             ended = true;
         }
 
+        if (newCharList.length === 9) {
+            this.firedList = false;
+            console.log(this.firedList)
+        }
+
         this.setState(({offset, charList}) => ({
             charList: [...charList, ...newCharList],
             loading: false,
@@ -67,6 +77,9 @@ class CharList extends Component {
             offset: offset + 9,
             charEnded: ended
         }))
+
+        // if ()
+        // this.fired = false;
     }
 
     onError = () => {
@@ -128,7 +141,7 @@ const ViewCharList = ({charList, props}) => {
 }
 
 CharList.propTypes = {
-    onCharSelected: PropTypes.func,
+    onCharSelected: PropTypes.func.isRequired,
 }
 
 
