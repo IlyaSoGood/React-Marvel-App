@@ -15,7 +15,6 @@ class CharList extends Component {
         newItemLoading: false,
         offset: 200,
         charEnded: false,
-        // scroll: 0
     }
 
     firedList = false;
@@ -24,8 +23,7 @@ class CharList extends Component {
 
     componentDidMount() {
         this.onRequest(this.state.offset);
-        window.addEventListener('scroll', () => this.loadListByScroll(this.state.offset));
-        // window.addEventListener('scroll', (offset) => this.);
+        // window.addEventListener('scroll', () => this.loadListByScroll(this.state.offset));
     }
     componentDidUpdate() {
         // console.log('componentDidUpdate');
@@ -78,8 +76,6 @@ class CharList extends Component {
             charEnded: ended
         }))
 
-        // if ()
-        // this.fired = false;
     }
 
     onError = () => {
@@ -89,19 +85,60 @@ class CharList extends Component {
         })
     }
 
+    setListItemRef = (elem, i) => {
+        this.myRef[i] = elem;
+    }
+
+    focusListItem = (i) => {
+        if (this.myRef) {
+            this.myRef.classList.add('char__item_selected');
+        }
+    }
+
+    renderItems(arr) {
+        const items = arr.map((item, i) => {
+            let className = "char__item";
+            const {thumbnail, name, id} = item;
+
+            let styleThumbnail = {};
+            if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
+
+            return (
+                <li 
+                ref={this.setListItemRef(item, i)}
+                className={className} 
+                key={id} 
+                onClick={() => {this.props.onCharSelected(id); this.focusListItem(i)}}>
+                    <img src={thumbnail} alt={name} style={styleThumbnail}/>
+                    <div className="char__name">{name}</div>
+                </li>
+            )
+        })
+        return (
+            <ul className="char__grid">
+                {items}
+            </ul>
+        )
+    }
+
     render () {
         const {charList, loading, error, offset, newItemLoading, charEnded} = this.state;
+
+        const items = this.renderItems(charList);
+
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? <ViewCharList charList={charList} props={this.props}/> : null;
+        // const content = !(loading || error) ? <ViewCharList charList={charList} props={this.props}/> : null;
+        const content = !(loading || error) ? items : null;
+
 
         return (
             <div className="char__list">
                 {errorMessage}
                 {spinner}
-                <ul className="char__grid">
+                {/* <ul className="char__grid"> */}
                     {content}
-                </ul>
+                {/* </ul> */}
                 <button 
                         className="button button__main button__long"
                         disabled={newItemLoading}
@@ -114,31 +151,30 @@ class CharList extends Component {
     }
 }
 
-const ViewCharList = ({charList, props}) => {
-    return (
-        charList.map((item, i) => {
-            let {name, thumbnail, id} = item;
-            let className = "char__item";
-            if (i === 2) {className = 'char__item char__item_selected'}
+// const ref = React.createRef();
 
-            let styleThumbnail = {};
-            if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
+// const ViewCharList = ({charList, props}, ref) => {
+//     return (
+//         charList.map((item, i) => {
+//             let {name, thumbnail, id} = item;
+//             let className = "char__item";
 
-            // {
-            //     item.addEventListener('click', (e) => {
-            //         e.classList.toggle('char__item_selected')
-            //     })
-            // }
+//             let styleThumbnail = {};
+//             if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
 
-            return (
-                <li className={className} key={id} onClick={() => props.onCharSelected(id)}>
-                    <img src={thumbnail} alt={name} style={styleThumbnail}/>
-                    <div className="char__name">{name}</div>
-                </li>
-            )
-        })
-    )
-}
+//             return (
+//                 <li 
+//                 className={className} 
+//                 key={id} 
+//                 onClick={() => props.onCharSelected(id)}
+//                 >
+//                     <img src={thumbnail} alt={name} style={styleThumbnail}/>
+//                     <div className="char__name">{name}</div>
+//                 </li>
+//             )
+//         })
+//     )
+// }
 
 CharList.propTypes = {
     onCharSelected: PropTypes.func.isRequired,
