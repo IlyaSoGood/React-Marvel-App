@@ -9,7 +9,7 @@ import ComicsList from '../comicsList/ComicsList';
 import SingleComic from '../singleComic/SingleComic';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
-import './app.scss';
+import './App.scss';
 import vision from '../../resources/img/vision.png';
 
 class App extends Component {

@@ -84,15 +84,14 @@ class CharList extends Component {
             error: true
         })
     }
+    charItemRefs = [];
 
     setListItemRef = (elem, i) => {
-        this.myRef[i] = elem;
+        this.charItemRefs[i] = elem;
     }
 
     focusListItem = (i) => {
-        if (this.myRef) {
-            this.myRef.classList.add('char__item_selected');
-        }
+        this.charItemRefs[i].focus();
     }
 
     renderItems(arr) {
@@ -108,7 +107,8 @@ class CharList extends Component {
                 ref={this.setListItemRef(item, i)}
                 className={className} 
                 key={id} 
-                onClick={() => {this.props.onCharSelected(id); this.focusListItem(i)}}>
+                onClick={() => {this.props.onCharSelected(id);}}
+                tabIndex={0}>
                     <img src={thumbnail} alt={name} style={styleThumbnail}/>
                     <div className="char__name">{name}</div>
                 </li>
