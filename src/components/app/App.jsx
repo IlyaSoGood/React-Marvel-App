@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
 import AppHeader from '../appHeader/AppHeader';
 import RandomChar from '../randomChar/RandomChar';
@@ -12,66 +12,53 @@ import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import './App.scss';
 import vision from '../../resources/img/vision.png';
 
-class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+const App = () => {
+    const [selectedChar, setChar] = useState(null);
 
-  state = {
-    type: {
-      page: 'Characters',
-      pageComics: 'list'
-    },
-    selectedChar: null
-  }
 
-  onCharSelected = (id) => {
-    this.setState({
-      selectedChar: id
-    })
-  }
+    const onCharSelected = (id) => {
+        setChar(id);
+    }
 
-  render () {
-    const typePage = this.state.type.page;
-    const typeComicsPage = this.state.type.pageComics;
+    // const typePage = this.state.type.page;
+    // const typeComicsPage = this.state.type.pageComics;
 
     return (
-      <div className="app">
-        <AppHeader/>
-        <main>
-          {typePage === 'Characters' && 
-            <>
-              <ErrorBoundary>
-                <RandomChar/>
-              </ErrorBoundary>
-              <div className='char__content'>
-                <ErrorBoundary>
-                  <CharList onCharSelected={this.onCharSelected}/>
-                </ErrorBoundary>
-                <ErrorBoundary>
-                  <CharInfo charId={this.state.selectedChar}/>
-                </ErrorBoundary>
-                
-              </div>
-              <img className="bg-decoration" src={vision} alt="vision"></img>
-            </>
-          }
-          {typePage === 'Comics' &&
-            <>
-              <AppBanner/>
-              {typeComicsPage === 'list' &&
-                <ComicsList/>
-              }
-              {typeComicsPage === 'single' &&
-                <SingleComic/>
-              }
-            </>
-          }
+        <div className="app">
+            <AppHeader/>
+            <main>
+                {/* {typePage === 'Characters' &&  */}
+                {/* <> */}
+                    <ErrorBoundary>
+                        <RandomChar/>
+                    </ErrorBoundary>
+                    <div className='char__content'>
+                    <ErrorBoundary>
+                        <CharList onCharSelected={onCharSelected}/>
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                        <CharInfo charId={selectedChar}/>
+                    </ErrorBoundary>
+                    
+                    </div>
+                    <img className="bg-decoration" src={vision} alt="vision"></img>
+                {/* </> */}
+                {/* } */}
+                {/* {typePage === 'Comics' &&
+                <>
+                    <AppBanner/>
+                    {typeComicsPage === 'list' &&
+                    <ComicsList/>
+                    }
+                    {typeComicsPage === 'single' &&
+                    <SingleComic/>
+                    }
+                </>
+                } */}
 
-        </main>
-      </div>
+            </main>
+        </div>
     );
-  }
 
 
 }
