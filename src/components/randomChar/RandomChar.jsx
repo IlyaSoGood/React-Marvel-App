@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect} from 'react';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -12,13 +12,15 @@ const RandomChar = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    const marvelService = useMemo(() => {
-        return (new MarvelService)
-    }, [])
+    const marvelService = new MarvelService();
 
     useEffect(() => {
         updateChar();
-        console.log('useEffect')
+        const timerId = setInterval(updateChar, 60000);
+
+        return () => {
+            clearInterval(timerId)
+        }
     }, [])
 
     const onCharLoading = () => {

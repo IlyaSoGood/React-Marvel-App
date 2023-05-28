@@ -19,20 +19,7 @@ const CharList = (props) => {
     const marvelService = new MarvelService();
     useEffect(() => {
         onRequest(offset);
-        // window.addEventListener('scroll', () => loadListByScroll(this.state.offset));
     }, [])
-
-    //Реализована дозагрузка CharList при скролле с помощью переменной this.firedList. Эта переменная принимает значение true каждый раз когда условия на событие scroll выполняются. CharList растянет window вниз. По завершению метода this.onRequest/this.onCharListLoaded (который выполнится спустя задержку), переменная снова принимает значение false при условии, что список новых персонажей = 9. ЕДИНСТВЕННЫЙ МОМЕНТ, не реализован removeEventListener на событие скролл в момент componentWillUnmount, так как функция должна быть именованной, а я пока не знаю как сослаться на this CharList, а не this объекта Event scroll.
-    let firedList = false;
-    const loadListByScroll = (offset) => {
-        if (this.firedList === true) {return}
-        if ((Math.floor(window.outerHeight + window.pageYOffset) > Math.floor(document.scrollingElement.offsetHeight) - 20) && window.pageYOffset > 0) {
-            this.onRequest(offset);
-            this.firedList = true;
-            console.log('loaded-List-By-Scroll');
-            // window.removeEventListener('scroll', () => this.loadListByScroll(this.state.offset));
-        }
-    }
 
     const onRequest = (offset) => {
         onCharListLoading();
@@ -52,17 +39,11 @@ const CharList = (props) => {
             ended = true;
         }
 
-        if (newCharList.length === 9) {
-            firedList = false;
-            // console.log(firedList)
-        }
-
         setCharList(charList => [...charList, ...newCharList]);
         setLoading(loading => false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
-
     }
 
     const onError = () => {

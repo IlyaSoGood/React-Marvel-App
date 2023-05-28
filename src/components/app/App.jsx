@@ -15,46 +15,27 @@ import vision from '../../resources/img/vision.png';
 const App = () => {
     const [selectedChar, setChar] = useState(null);
 
-
     const onCharSelected = (id) => {
         setChar(id);
     }
-
-    // const typePage = this.state.type.page;
-    // const typeComicsPage = this.state.type.pageComics;
 
     return (
         <div className="app">
             <AppHeader/>
             <main>
-                {/* {typePage === 'Characters' &&  */}
-                {/* <> */}
-                    <ErrorBoundary>
-                        <RandomChar/>
-                    </ErrorBoundary>
-                    <div className='char__content'>
-                    <ErrorBoundary>
-                        <CharList onCharSelected={onCharSelected}/>
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo charId={selectedChar}/>
-                    </ErrorBoundary>
-                    
-                    </div>
-                    <img className="bg-decoration" src={vision} alt="vision"></img>
-                {/* </> */}
-                {/* } */}
-                {/* {typePage === 'Comics' &&
-                <>
-                    <AppBanner/>
-                    {typeComicsPage === 'list' &&
-                    <ComicsList/>
-                    }
-                    {typeComicsPage === 'single' &&
-                    <SingleComic/>
-                    }
-                </>
-                } */}
+                <ErrorBoundary>
+                    <RandomChar/>
+                </ErrorBoundary>
+                <div className='char__content'>
+                <ErrorBoundary>
+                    <CharList onCharSelected={onCharSelected}/>
+                </ErrorBoundary>
+                <ErrorBoundary>
+                    <CharInfo charId={selectedChar}/>
+                </ErrorBoundary>
+                
+                </div>
+                <img className="bg-decoration" src={vision} alt="vision"></img>
 
             </main>
         </div>
