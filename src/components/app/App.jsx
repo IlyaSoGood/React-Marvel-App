@@ -22,22 +22,23 @@ const App = () => {
     return (
         <div className="app">
             <AppHeader/>
-            <main>
+            {/* <main>
                 <ErrorBoundary>
                     <RandomChar/>
                 </ErrorBoundary>
                 <div className='char__content'>
-                <ErrorBoundary>
-                    <CharList onCharSelected={onCharSelected}/>
-                </ErrorBoundary>
-                <ErrorBoundary>
-                    <CharInfo charId={selectedChar}/>
-                </ErrorBoundary>
-                
+                    <ErrorBoundary>
+                        <CharList onCharSelected={onCharSelected}/>
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                        <CharInfo charId={selectedChar}/>
+                    </ErrorBoundary>
                 </div>
                 <img className="bg-decoration" src={vision} alt="vision"></img>
-
-            </main>
+            </main> */}
+            <ErrorBoundary>
+                <ComicsList/>
+            </ErrorBoundary>
         </div>
     );
 
