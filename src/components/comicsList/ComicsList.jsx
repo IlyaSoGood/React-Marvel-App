@@ -5,6 +5,7 @@ import xMen from '../../resources/img/x-men.png';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import { Link } from 'react-router-dom';
 
 const ComicsList = (props) => {
     const [comicsList, setComicsList] = useState([]);
@@ -66,11 +67,11 @@ const ComicsList = (props) => {
                         }
                     }}
                 >   
-                    <a href="#">
+                    <Link to={`/comics/${id}`}>
                         <img src={thumbnail} alt={title} className="comics__item-img" style={styleThumbnail}/>
                         <div className="comics__item-name">{title}</div>
                         <div className="comics__item-price">{price !== 0 ? price + "$" : 'NOT AVAILABLE'}</div>
-                    </a>
+                    </Link>
                 </li>
             )
         })
