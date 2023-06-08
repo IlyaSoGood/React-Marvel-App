@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -53,31 +54,38 @@ const CharList = (props) => {
             if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
 
             return (
-                <li
-                    tabIndex={0} 
-                    ref={el => itemRefs.current[i] = el}
-                    className={className} 
-                    key={id} 
-                    onClick={() => {
-                        props.onCharSelected(id);
-                        focusOnItem(i);
-                    }}
-                    onKeyPress={(e) => {
-                        if (e.key === ' ' || e.key === 'Enter') {
-                            props.onCharSelected(id)
-                            focusOnItem(i)
-                        }
-                    }}
+                <CSSTransition
+                    key={id}
+                    // nodeRef={nodeRef}
+                    timeout={500}
+                    classNames="item"
                 >
-                    <img src={thumbnail} alt={name} style={styleThumbnail}/>
-                    <div className="char__name">{name}</div>
-                </li>
+                    <li
+                        tabIndex={0} 
+                        ref={el => itemRefs.current[i] = el}
+                        className={className} 
+                        // key={id} 
+                        onClick={() => {
+                            props.onCharSelected(id);
+                            focusOnItem(i);
+                        }}
+                        onKeyPress={(e) => {
+                            if (e.key === ' ' || e.key === 'Enter') {
+                                props.onCharSelected(id)
+                                focusOnItem(i)
+                            }
+                        }}
+                    >
+                        <img src={thumbnail} alt={name} style={styleThumbnail}/>
+                        <div className="char__name">{name}</div>
+                    </li>
+                </CSSTransition>
             )
         })
         return (
-            <ul className="char__grid">
-                {items}
-            </ul>
+                <TransitionGroup className="char__grid" component={'ul'}>
+                    {items}
+                </TransitionGroup>
         )
     }
 

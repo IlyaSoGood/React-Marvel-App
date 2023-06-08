@@ -39,3 +39,23 @@
         color: #fff;
     }
 }
+
+.item-enter {
+    opacity: 0;
+    transform: none;
+    transform: translateX(-200px);
+}
+.item-enter-active {
+    opacity: 1;
+    transition: all 500ms ease-in;
+    transform: none;
+    
+}
+.item-exit {
+    opacity: 1;
+}
+.item-exit-active {
+    opacity: 0;
+    transition: all 500ms ease-in;
+
+}
