@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import './comicsList.scss';
-import UW from '../../resources/img/UW.png';
-import xMen from '../../resources/img/x-men.png';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
