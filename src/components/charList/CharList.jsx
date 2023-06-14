@@ -4,9 +4,29 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+
 import useMarvelService from '../../services/MarvelService';
 
 import './charList.scss';
+
+const setContent = (status, Component, newItemLoading) => {
+    switch (status) {
+        case 'waiting':
+            return <Spinner/>
+            break;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+            break;
+        case 'confirmed':
+            return <Component/>;
+            break;
+        case 'error':
+            return <ErrorMessage/>
+            break;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
 
 const CharList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -15,7 +35,7 @@ const CharList = (props) => {
     const [charEnded, setCharEnded] = useState(false);
 
 
-    const {loading, error, getAllCharacters} = useMarvelService();
+    const { getAllCharacters, status, setStatus} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -25,9 +45,10 @@ const CharList = (props) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllCharacters(offset)
             .then(onCharListLoaded)
+            .then(() => setStatus('confirmed'))
     }
 
-    const onCharListLoaded = (newCharList) => {
+    const onCharListLoaded = async (newCharList) => {
         let ended = false;
         if (newCharList.length < 9) {
             ended = true;
@@ -37,6 +58,7 @@ const CharList = (props) => {
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
+        
     }
 
     const itemRefs = useRef([]);
@@ -50,15 +72,20 @@ const CharList = (props) => {
             let className = "char__item";
             const {thumbnail, name, id} = item;
 
-            let styleThumbnail = {};
-            if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
+            // let styleThumbnail = {};
+            // if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
+
+            let imgStyle = {'objectFit' : 'cover'};
+            if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                imgStyle = {'objectFit' : 'unset'};
+            }
 
             return (
                 <CSSTransition
                     key={id}
                     // nodeRef={nodeRef}
                     timeout={500}
-                    classNames="item"
+                    classNames="char__item"
                 >
                     <li
                         tabIndex={0} 
@@ -76,34 +103,30 @@ const CharList = (props) => {
                             }
                         }}
                     >
-                        <img src={thumbnail} alt={name} style={styleThumbnail}/>
+                        {/* <img src={thumbnail} alt={name} style={styleThumbnail}/> */}
+                        <img src={thumbnail} alt={name} style={imgStyle}/>
                         <div className="char__name">{name}</div>
                     </li>
                 </CSSTransition>
             )
         })
         return (
-                <TransitionGroup className="char__grid" component={'ul'}>
-                    {items}
-                </TransitionGroup>
+            <TransitionGroup className="char__grid" component={'ul'}>
+                {items}
+            </TransitionGroup>
         )
     }
 
-    const items = renderItems(charList);
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
-
     return (
         <div className="char__list">
-            {errorMessage}
-            {spinner}
-            {items}
+            {setContent(status, () => renderItems(charList), newItemLoading)}
+            {console.log('render list')}
+
             <button 
                     className="button button__main button__long"
                     disabled={newItemLoading}
                     style={{'display' : charEnded ? 'none' : 'block'}}
-                    onClick={() => onRequest(offset)}>
+                    onClick={() => onRequest(offset, false)}>
                 <div className="inner">load more</div>
             </button>
         </div>
