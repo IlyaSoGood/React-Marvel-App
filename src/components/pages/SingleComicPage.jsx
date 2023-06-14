@@ -11,6 +11,8 @@ const SingleComicPage = (props) => {
     const {comicId} = useParams();
     const [comic, setComic] = useState(null);
 
+    console.log(comic)
+
     const {loading, error, getComic, clearError} = useMarvelService();
     
     useEffect(() => {
@@ -31,7 +33,7 @@ const SingleComicPage = (props) => {
     const spinner = loading ? <Spinner/> : null;
     const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
 
-    console.log(comic)
+    // console.log(comic)
 
     return (
         <>

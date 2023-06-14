@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 import useMarvelService from '../../services/MarvelService';
 
+import ErrorMessage from '../errorMessage/ErrorMessage';
+
 
 import './searchCharacter.scss'
 
@@ -35,68 +37,65 @@ const MyTextInput = ({...props}) => {
 
 const SearchCharacter = () => {
     const [char, setChar] = useState(null);
-    const [error, setError] = useState(null);
 
-    const { getCharacterByName } = useMarvelService();
+    const { loading, error, getCharacterByName, clearError } = useMarvelService();
+
+    const onCharLoaded = (char) => {
+        setChar(char);
+    }
 
     const searchChar = (name) => {
+        clearError();
+
         getCharacterByName(name)
-            .then(res => {
-                    setChar(res)
-                    setError(false)
-                }
-            )
-            .catch(res => {
-                    setChar(null)
-                    setError(true)
-                }
-            )
-        
+            .then(onCharLoaded)  
     }
-    
+
+    const errorMessage = error ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
+    const results = !char 
+        ?   null : char.length > 0 
+        ?   <div className="char__search-info">
+                <div className="char__search-info-title">There is! Visit {char[0].name} page?</div>
+                <Link to={`/characters/${char[0].id}`} className="button button__secondary char__search-info-link">
+                    <div className="inner">TO PAGE</div>
+                </Link>
+            </div>
+        :   <div className="char__search-error">The character was not found. Check the name and try again</div>
+
 
     return (
-        <Formik
-            initialValues={{
-                name: ''
-            }}
-            validate = {validate}
-            onSubmit = {value => searchChar(value.name)}
-        >
-            <Form className="char__search">
-                <div className="char__search-title">Or find a character by name:</div>
-                <div className="char__search-wrapper">
-                    <MyTextInput 
-                        type="text"
-                        // ref={inputRef}
-                        className="char__search-input"
-                        placeholder="Enter name"
-                        name="name"
-                    />
-    
-                    <button
-                        type="submit"
-                        className="button button__main char__search-submit"
-                    >
-                        <div className="inner">FIND</div>
-                    </button>
-                </div>
+        <div className="char__search">
+            <Formik
+                initialValues={{
+                    name: ''
+                }}
+                validate = {validate}
+                onSubmit = {value => searchChar(value.name)}
+            >
+                <Form>
+                    <div className="char__search-title">Or find a character by name:</div>
+                    <div className="char__search-wrapper">
+                        <MyTextInput 
+                            type="text"
+                            className="char__search-input"
+                            placeholder="Enter name"
+                            name="name"
+                        />
+        
+                        <button
+                            type="submit"
+                            className="button button__main char__search-submit"
+                        >
+                            <div className="inner">FIND</div>
+                        </button>
+                    </div>
+                </Form>
+            </Formik>
+            {results}
+            {errorMessage}
+        </div>
 
-                {char
-                    ?   <div className="char__search-info">
-                            <div className="char__search-info-title">There is! Visit {char.name} page?</div>
-                            <Link className="button button__secondary char__search-info-link" to={`/character/${char.id}`}>
-                                <div className="inner">TO PAGE</div>
-                            </Link>
-                        </div>
-                    : null
-                }
-                {error
-                    ?   <div className="char__search-error">The character was not found. Check the name and try again</div>
-                    : null
-                }
-            </Form>
-        </Formik>
+
     );
 };
 
