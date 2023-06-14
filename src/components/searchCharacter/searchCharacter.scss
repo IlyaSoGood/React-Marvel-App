@@ -24,11 +24,45 @@
         &:focus-visible {
             outline: none;
         }
+        &-error {
+            color: #9F0013;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 21px;
+            margin-top: 25px;
+        }
+        &-wrapper {
+            width: 100%;
+        }
     }
     &-wrapper {
         display: flex;
+        align-items: flex-start;
     }
     &-submit {
         margin-left: 24px;
+    }
+    &-info {
+        display: flex;
+        margin-top: 15px;
+        &-title {
+            color: #03710E;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 21px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        &-link {
+            margin-left: 24px;
+        }
+    }
+    &-error {
+        margin-top: 25px;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 21px;
+        color: #9F0013;
     }
 }
