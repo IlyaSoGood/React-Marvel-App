@@ -7,7 +7,6 @@ import './singleCharacterLayout.scss';
 const SingleCharacterLayout = ({data}) => {
 
     const {name, description, thumbnail} = data;
-    console.log(data)
 
     return (
         <div className="single-comic">

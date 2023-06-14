@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-
+import { useState } from 'react';
 import { Formik, Form, useField } from 'formik';
-
 import { Link } from 'react-router-dom';
 
 import useMarvelService from '../../services/MarvelService';
-
 import ErrorMessage from '../errorMessage/ErrorMessage';
-
 
 import './searchCharacter.scss'
 
@@ -34,11 +30,37 @@ const MyTextInput = ({...props}) => {
         </div>
     )
 }
+const ResultsSuccess = ({char}) => {
+    return (
+        <div className="char__search-info">
+            <div className="char__search-info-title">There is! Visit {char[0].name} page?</div>
+            <Link to={`/characters/${char[0].id}`} className="button button__secondary char__search-info-link">
+                <div className="inner">TO PAGE</div>
+            </Link>
+        </div>
+    )
+}
+const ResultsError = () => {
+    return (
+        <div className="char__search-error">The character was not found. Check the name and try again</div>
+    )
+}
+
+const setContent = (status, char) => {
+    switch (status) {
+        case 'confirmed':
+            return char.length > 0 ? <ResultsSuccess char={char}/> : <ResultsError/> ;
+        case 'error':
+            return <div className="char__search-critical-error"><ErrorMessage/></div>;
+        default:
+            return null;
+    }
+}
 
 const SearchCharacter = () => {
     const [char, setChar] = useState(null);
 
-    const { loading, error, getCharacterByName, clearError } = useMarvelService();
+    const { getCharacterByName, clearError, status, setStatus } = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);
@@ -48,19 +70,10 @@ const SearchCharacter = () => {
         clearError();
 
         getCharacterByName(name)
-            .then(onCharLoaded)  
+            .then(onCharLoaded)
+            .then(() => setStatus('confirmed'))
     }
-
-    const errorMessage = error ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
-    const results = !char 
-        ?   null : char.length > 0 
-        ?   <div className="char__search-info">
-                <div className="char__search-info-title">There is! Visit {char[0].name} page?</div>
-                <Link to={`/characters/${char[0].id}`} className="button button__secondary char__search-info-link">
-                    <div className="inner">TO PAGE</div>
-                </Link>
-            </div>
-        :   <div className="char__search-error">The character was not found. Check the name and try again</div>
+ 
 
 
     return (
@@ -85,14 +98,15 @@ const SearchCharacter = () => {
                         <button
                             type="submit"
                             className="button button__main char__search-submit"
+                            disabled={status === 'loading'}
                         >
                             <div className="inner">FIND</div>
                         </button>
                     </div>
                 </Form>
             </Formik>
-            {results}
-            {errorMessage}
+
+            {setContent(status, char)}
         </div>
 
 

@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
+import useMarvelService from '../../services/MarvelService';
+
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-
-import useMarvelService from '../../services/MarvelService';
 
 import './charList.scss';
 
@@ -13,16 +13,12 @@ const setContent = (status, Component, newItemLoading) => {
     switch (status) {
         case 'waiting':
             return <Spinner/>
-            break;
         case 'loading':
             return newItemLoading ? <Component/> : <Spinner/>;
-            break;
         case 'confirmed':
             return <Component/>;
-            break;
         case 'error':
             return <ErrorMessage/>
-            break;
         default:
             throw new Error('Unexpected process state');
     }
@@ -39,6 +35,7 @@ const CharList = (props) => {
 
     useEffect(() => {
         onRequest(offset, true);
+        // eslint-disable-next-line
     }, [])
 
     const onRequest = (offset, initial) => {
@@ -68,17 +65,13 @@ const CharList = (props) => {
     }
 
     function renderItems(arr) {
+        console.log('render items')
         const items = arr.map((item, i) => {
-            let className = "char__item";
             const {thumbnail, name, id} = item;
 
-            // let styleThumbnail = {};
-            // if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
+            let styleThumbnail = {};
+            if(thumbnail.match(/not_available/)) {styleThumbnail = {objectFit: 'contain'}};
 
-            let imgStyle = {'objectFit' : 'cover'};
-            if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-                imgStyle = {'objectFit' : 'unset'};
-            }
 
             return (
                 <CSSTransition
@@ -90,7 +83,7 @@ const CharList = (props) => {
                     <li
                         tabIndex={0} 
                         ref={el => itemRefs.current[i] = el}
-                        className={className} 
+                        className="char__item"
                         // key={id} 
                         onClick={() => {
                             props.onCharSelected(id);
@@ -103,8 +96,7 @@ const CharList = (props) => {
                             }
                         }}
                     >
-                        {/* <img src={thumbnail} alt={name} style={styleThumbnail}/> */}
-                        <img src={thumbnail} alt={name} style={imgStyle}/>
+                        <img src={thumbnail} alt={name} style={styleThumbnail}/>
                         <div className="char__name">{name}</div>
                     </li>
                 </CSSTransition>
@@ -117,10 +109,14 @@ const CharList = (props) => {
         )
     }
 
+    const elements = useMemo(() => {
+        return setContent(status, () => renderItems(charList), newItemLoading)
+        // eslint-disable-next-line
+    }, [status])
+
     return (
         <div className="char__list">
-            {setContent(status, () => renderItems(charList), newItemLoading)}
-            {console.log('render list')}
+            {elements}
 
             <button 
                     className="button button__main button__long"

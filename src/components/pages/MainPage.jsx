@@ -13,6 +13,7 @@ const MainPage = () => {
     const [selectedChar, setChar] = useState(null);
 
     const onCharSelected = (id) => {
+        console.log('mp')
         setChar(id);
     }
 
